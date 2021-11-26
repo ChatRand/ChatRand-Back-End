@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const connectToDatabase = require('./database/db.js');
 const cors = require('cors');
 const v1Routes = require('./api/routes/v1');
+
 app.use(cors());
 app.options('*', cors());
 
