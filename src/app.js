@@ -1,26 +1,47 @@
+/* eslint-disable max-len */
 const express = require('express');
 const app = express();
 const cookieParser = require('cookie-parser');
 const connectToDatabase = require('./database/db.js');
 const cors = require('cors');
 const v1Routes = require('./api/routes/v1');
+const helmet = require('helmet');
 
-app.use(cors());
-app.options('*', cors());
+const mongoSanitize = require('express-mongo-sanitize');
 
-connectToDatabase();
+const {httpLogger} = require('./helpers/logger/logger');
+const Server404Error = require('./helpers/error/Server404Error');
+const {errorHandler} = require('./api/middlewares/error/errorHandler');
+const clientErrorHandler = require('./api/middlewares/error/clientErrorHandler');
 
 app.use(express.json());
 app.use(express.urlencoded({
   extended: false,
 }));
 
+app.use(helmet());
+
+app.use(cors());
+app.options('*', cors());
+
+app.use(mongoSanitize());
+
 // Parse Cookie On req.cookies
 app.use(cookieParser());
 
+connectToDatabase();
+
+app.use(httpLogger);
+
 app.use('/api/v1', v1Routes);
 app.all('*', (req, res, next) => {
-  console.log(`path ${ req.originalUrl } not Found`);
+  next(
+      new Server404Error(`Path ${req.originalUrl} not found`),
+  );
 });
+
+app.use(errorHandler);
+
+app.use(clientErrorHandler);
 
 module.exports = app;
