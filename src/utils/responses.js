@@ -7,10 +7,11 @@ const errorResponse = (res, httpCode, payload) => {
   });
 };
 
-const successResponse = (res, payload) => {
+const successResponse = (res, payload, message) => {
   res.status(OK).json({
     success: true,
-    message: payload,
+    message: message,
+    data: payload,
   });
 };
 

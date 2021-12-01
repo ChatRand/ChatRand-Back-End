@@ -4,7 +4,7 @@ const UserValidationSchema = require('../../../helpers/dataValidator/user.schema
 
 const signInValidator = asyncHandler(async (req, res, next) => {
   await UserValidationSchema.signInSchema.validateAsync(req.body, UserValidationSchema.schemaOptions);
-  return next;
+  return next();
 });
 
 const SignUpValidator = asyncHandler(async (req, res, next) => {

@@ -7,6 +7,7 @@ const UserService = require('../../services/user.service');
 const {successResponse, errorResponse} = require('../../utils/responses');
 const {BAD_REQUEST} = require('../../helpers/constants/statusCodes');
 const asyncHandler = require('../../helpers/error/asyncHandler');
+const {serverLogger} = require('../../helpers/logger/serverLogger');
 
 const userSignUp = asyncHandler(async (req, res) => {
   const userData = req.body;
@@ -22,9 +23,9 @@ const userSignUp = asyncHandler(async (req, res) => {
     secure: config.app.secureCookie,
     sameSite: true,
   });
-
+  serverLogger.info(`User With Id ${user._id} Successfully Registered`);
   // eslint-disable-next-line max-len
-  return successResponse(res, _.pick(user, ['_id', 'firstName', 'lastName', 'userName', 'email', 'phoneNumber']));
+  return successResponse(res, _.pick(user, ['_id', 'firstName', 'lastName', 'userName', 'email', 'phoneNumber']), 'User Saved To Database');
 });
 
 const userSignIn = asyncHandler(async (req, res) => {
@@ -41,8 +42,9 @@ const userSignIn = asyncHandler(async (req, res) => {
     secure: config.app.secureCookie,
     sameSite: true,
   });
+  serverLogger.info(`User With Id ${user._id} Successfully Logged In`);
 
-  return successResponse(res, _.pick(user, ['_id', 'firstName', 'lastName', 'email']));
+  return successResponse(res, _.pick(user, ['_id', 'firstName', 'lastName', 'email']), 'Successful Login');
 });
 
 module.exports = {
