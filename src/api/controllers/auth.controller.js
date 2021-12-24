@@ -1,5 +1,5 @@
-/* eslint-disable max-len */
 const _ = require('lodash');
+const {emailEvent} = require('../../subscribers/send_email_confirmation');
 
 const config = require('../../config/config');
 const UserService = require('../../services/user.service');
@@ -24,8 +24,20 @@ const userSignUp = asyncHandler(async (req, res) => {
     sameSite: true,
   });
   serverLogger.info(`User With Id ${user._id} Successfully Registered`);
-  // eslint-disable-next-line max-len
-  return successResponse(res, _.pick(user, ['_id', 'firstName', 'lastName', 'userName', 'email', 'phoneNumber']), 'User Saved To Database');
+  emailEvent.emit('user_regsistered', user);
+
+  return successResponse(
+      res,
+      _.pick(user,
+          [
+            '_id',
+            'firstName',
+            'lastName',
+            'userName',
+            'email',
+            'phoneNumber',
+          ],
+      ), 'User Saved To Database');
 });
 
 const userSignIn = asyncHandler(async (req, res) => {
@@ -44,7 +56,16 @@ const userSignIn = asyncHandler(async (req, res) => {
   });
   serverLogger.info(`User With Id ${user._id} Successfully Logged In`);
 
-  return successResponse(res, _.pick(user, ['_id', 'firstName', 'lastName', 'email']), 'Successful Login');
+  return successResponse(
+      res,
+      _.pick(user,
+          [
+            '_id',
+            'firstName',
+            'lastName',
+            'email',
+          ],
+      ), 'Successful Login');
 });
 
 module.exports = {

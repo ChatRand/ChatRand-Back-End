@@ -10,6 +10,9 @@
   "author": "Mikias Yonas",
   "license": "ISC",
   "dependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/node": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

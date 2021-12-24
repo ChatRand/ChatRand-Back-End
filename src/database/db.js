@@ -22,7 +22,7 @@ const connectToDatabase = () => {
   });
 
   mongoose.connection.on('error', (error) => {
-    serverLogger.info('Error while connecting to the database \n Reason: ${ error }');
+    serverLogger.info(`Error while connecting to the database \n Reason: ${ error }`);
   });
 
   mongoose.connection.on('disconnected', () => {

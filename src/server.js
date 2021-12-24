@@ -19,11 +19,11 @@ process.on('unhandledRejection', (err) => {
 });
 
 process.on('SIGTERM', () => {
-  serverLogger.info(`process ${process.pid} received terminate SIGTERM signal!...existing...`);
+  serverLogger.info(`process ${process.pid} received terminate SIGTERM signal!...exiting...`);
   serverTerminator();
 });
 
 process.on('SIGINT', () => {
-  serverLogger.info(`process ${process.pid} received interrupt SIGTERM signal!...existing...`);
+  serverLogger.info(`process ${process.pid} received interrupt SIGTERM signal!...exiting...`);
   serverTerminator();
 });
