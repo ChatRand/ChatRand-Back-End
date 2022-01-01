@@ -12,7 +12,6 @@ const signUp = async ({
   email,
   phoneNumber,
   password,
-
 }) => {
   const userExists = await User.findOne({
     userName,
