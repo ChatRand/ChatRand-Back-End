@@ -40,6 +40,14 @@ const userSchema = mongoose.Schema({
     type: String,
     required: false,
   },
+  confirmationCode: {
+    type: String,
+    required: false,
+  },
+  activated: {
+    type: Boolean,
+    default: false,
+  },
   role: {
     type: String,
     enum: ['user', 'admin', 'super-admin'],

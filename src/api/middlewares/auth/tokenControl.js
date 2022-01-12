@@ -10,9 +10,7 @@ const {errorResponse} = require('../../../utils/responses');
 const {UNAUTHORIZED, FORBIDDEN} = require('../../../helpers/constants/statusCodes');
 const config = require('../../../config/config');
 
-const BlackList = BlackListedToken;
-
-const authenticateToken = asyncHandler(async (req, res) => {
+const authenticateToken = asyncHandler(async (req, res, next) => {
   const authHeader = req.headers['authorization'];
 
   const bearer = authHeader && authHeader.split(' ')[0];
@@ -32,10 +30,10 @@ const authenticateToken = asyncHandler(async (req, res) => {
   BlackListedToken.find({
     token: token,
   }).then((found) => {
-    if (found) {
+    if (found.length > 0) {
       return errorResponse(res,
           UNAUTHORIZED,
-          'Token blacklisted. Cannot user this token');
+          'Token blacklisted. Cannot use this token');
     } else {
       jwt.verify(token, config.app.secret, async (err, payload) => {
         if (err) {
@@ -49,7 +47,7 @@ const authenticateToken = asyncHandler(async (req, res) => {
           });
 
           if (login.tokenDeleted) {
-            const blackListedToken = await BlackList.create({
+            const blackListedToken = await BlackListedToken.create({
               token: token,
             });
 
@@ -59,7 +57,8 @@ const authenticateToken = asyncHandler(async (req, res) => {
         }
 
         req.user = payload;
-        next();
+
+        return next();
       });
     }
   });

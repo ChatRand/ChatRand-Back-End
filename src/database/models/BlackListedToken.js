@@ -11,6 +11,6 @@ const blackListedTokenSchema = mongoose.Schema({
 });
 
 // eslint-disable-next-line max-len
-const BlackListedToken = mongoose.model('black_listed_token', blackListedTokenSchema);
+const BlackListedToken = mongoose.model('black_listed_tokens', blackListedTokenSchema);
 
 module.exports = BlackListedToken;

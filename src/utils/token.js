@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const asyncHandler = require('../helpers/error/asyncHandler');
 const customId = require('custom-id');
 const UserLogin = require('../database/models/UserLogin');
 const config = require('../config/config');
