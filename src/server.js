@@ -1,13 +1,31 @@
 /* eslint-disable max-len */
 const app = require('./app');
 const config = require('./config/config');
+
 const {serverLogger} = require('./helpers/logger/serverLogger');
 const centralErrorHandler = require('./helpers/error/centralErrorHandler');
 const serverTerminator = require('./utils/serverTerminator');
 
+const http = require('http');
+const server = http.createServer(app);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
+});
+
+io.on('connection', (socket) => {
+  console.log('connected new client');
+  socket.emit('welcome', {
+    message: 'welcome to chatRand',
+    socketId: socket.id,
+  });
+});
+
 const PORT = config.app.port;
 
-global.server = app.listen(PORT, () => {
+global.server = server.listen(PORT, () => {
   serverLogger.info(`Server Started And Listening On Port ${PORT}`);
 });
 

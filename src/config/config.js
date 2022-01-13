@@ -9,6 +9,8 @@ const development = {
     secureCookie: false,
     email_username: process.env.APP_EMAIL_USERNAME,
     email_password: process.env.APP_EMAIL_PASSWORD,
+    client_origin: process.env.CLIENT_ORIGIN || 'http://127.0.0.1:5500/',
+    socket_port: process.env.SOCKET_PORT || 5000,
   },
   db: {
     host: process.env.DB_HOST || 'localhost',
@@ -24,6 +26,8 @@ const production = {
     secureCookie: true,
     email_username: process.env.APP_EMAIL_USERNAME,
     email_password: process.env.APP_EMAIL_PASSWORD,
+    client_origin: process.env.CLIENT_ORIGIN,
+    socket_port: process.env.SOCKET_PORT,
   },
   db: {
     host: process.env.DB_HOST,
