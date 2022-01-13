@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 const {eventBus} = require('../utils/eventBus');
-const {sendMail} = require('../utils/sendMail');
+const {sendMail} = require('../utils/email');
 
 eventBus.on('user_regsistered', (user) => {
   const to = user.email;

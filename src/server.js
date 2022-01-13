@@ -5,29 +5,16 @@ const config = require('./config/config');
 const {serverLogger} = require('./helpers/logger/serverLogger');
 const centralErrorHandler = require('./helpers/error/centralErrorHandler');
 const serverTerminator = require('./utils/serverTerminator');
-
-const http = require('http');
-const server = http.createServer(app);
-const io = require('socket.io')(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST'],
-  },
-});
-
-io.on('connection', (socket) => {
-  console.log('connected new client');
-  socket.emit('welcome', {
-    message: 'welcome to chatRand',
-    socketId: socket.id,
-  });
-});
+const socket = require('./socket/socket');
 
 const PORT = config.app.port;
+const SOCKET_PORT = config.app.socket_port;
 
-global.server = server.listen(PORT, () => {
+global.server = app.listen(PORT, () => {
   serverLogger.info(`Server Started And Listening On Port ${PORT}`);
 });
+
+global.io = socket.listen(SOCKET_PORT);
 
 process.on('uncaughtException', (err) => {
   centralErrorHandler(err);
