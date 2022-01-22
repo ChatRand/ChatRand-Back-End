@@ -11,6 +11,9 @@ const development = {
     email_password: process.env.APP_EMAIL_PASSWORD,
     client_origin: process.env.CLIENT_ORIGIN || 'http://127.0.0.1:5500/',
     socket_port: process.env.SOCKET_PORT || 5555,
+    telegram_bot_token: process.env.TELEGRAM_BOT_TOKEN,
+    telegram_webhook_url: process.env.TELEGRAM_WEBHOOK_URL,
+    telegram_url: process.env.TELEGRAM_URL,
   },
   db: {
     host: process.env.DB_HOST || 'localhost',
@@ -28,6 +31,9 @@ const production = {
     email_password: process.env.APP_EMAIL_PASSWORD,
     client_origin: process.env.CLIENT_ORIGIN,
     socket_port: process.env.SOCKET_PORT,
+    telegram_bot_token: process.env.TELEGRAM_BOT_TOKEN,
+    telegram_webhook_url: process.env.TELEGRAM_WEBHOOK_URL,
+    telegram_url: process.env.TELEGRAM_URL,
   },
   db: {
     host: process.env.DB_HOST,

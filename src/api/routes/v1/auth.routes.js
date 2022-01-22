@@ -15,7 +15,7 @@ authRouter.delete('/sign-out', AuthController.userSignOut);
 authRouter.get('/check-username/:username', AuthController.checkUserName);
 authRouter.get('/check-email/:email', AuthController.checkEmail);
 
-authRouter.post('/account/verify/:confirmationCode', authenticateToken, AuthController.verifyAccount);
+authRouter.post('/account/verify/', authenticateToken, AuthController.verifyAccount);
 authRouter.post('/account/change-password', authenticateToken, AuthController.changePassword);
 
 authRouter.get('/user/logins/show', authenticateToken, AuthController.showUserLogins);

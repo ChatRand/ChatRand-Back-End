@@ -236,7 +236,7 @@ const checkUserName = asyncHandler(async (req, res) => {
 });
 
 const verifyAccount = asyncHandler(async (req, res) => {
-  const {confirmationCode} = req.params;
+  const {confirmationCode} = req.body;
   const user = req.user;
 
   const requestedUser = await UserService.findById(user.id);

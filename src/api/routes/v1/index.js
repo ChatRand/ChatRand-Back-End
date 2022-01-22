@@ -3,7 +3,9 @@ const express = require('express');
 const indexRouter = express.Router();
 
 const authRouter = require('./auth.routes');
+const botRouter = require('./bot');
 
-indexRouter.use(authRouter);
+indexRouter.use('/auth', authRouter);
+indexRouter.use('/bot', botRouter);
 
 module.exports = indexRouter;

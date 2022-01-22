@@ -11,6 +11,10 @@ io.on('connection', (socket) => {
     message: 'welcome to chatRand',
     socketId: socket.id,
   });
+
+  socket.on('disconnect', (reason) => {
+
+  });
 });
 
 
