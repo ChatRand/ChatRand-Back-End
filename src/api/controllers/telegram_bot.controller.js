@@ -65,10 +65,22 @@ const getUpdates = asyncHandler(async (req, res) => {
       'updates');
 });
 
+const deleteWebhook = asyncHandler(async (req, res) => {
+  // eslint-disable-next-line max-len
+  const url = `${ config.app.telegram_url }/bot${ config.app.telegram_bot_token }/deleteWebhook`;
+
+  const result = await axios.get(url);
+
+  return successResponse(res,
+      result.data,
+      'deleted webhook');
+});
+
 module.exports = {
   botMainController,
   setWebhook,
   sendMessage,
   webhookInfo,
   getUpdates,
+  deleteWebhook,
 };
