@@ -13,7 +13,7 @@ const emailSchema = joi.string().regex(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,
 const phoneNumberSchema = joi.string().required();
 
 const signInSchema = joi.object({
-  userName: userNameSchema,
+  username: userNameSchema,
   password: passwordSchema,
 });
 
