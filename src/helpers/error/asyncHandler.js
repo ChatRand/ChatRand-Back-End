@@ -1,6 +1,5 @@
 const ServerError = require('./ServerError');
 const ValidationError = require('./ValidationError');
-const {successResponse, errorResponse} = require('../../utils/responses');
 
 const Joi = require('joi');
 
