@@ -7,8 +7,8 @@ const errorResponse = (res, httpCode, payload) => {
   });
 };
 
-const successResponse = (requestObj, payload, message) => {
-  requestObj.res.status(OK).json({
+const successResponse = (res, payload, message) => {
+  res.status(OK).json({
     success: true,
     message: message,
     data: payload,

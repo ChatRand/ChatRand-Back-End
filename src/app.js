@@ -3,7 +3,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 // const connectToDatabase = require('./database/db');
 const cors = require('cors');
-const v1Routes = require('./api/routes/v1');
+const routes = require('./api/routes');
 const helmet = require('helmet');
 
 // const mongoSanitize = require('express-mongo-sanitize');
@@ -34,7 +34,7 @@ app.use(cookieParser());
 
 app.use(httpLogger);
 
-app.use('/api/v1', v1Routes);
+app.use('/api', routes);
 app.all('*', (req, res, next) => {
   next(
       new Server404Error(`Path ${req.originalUrl} not found`),
