@@ -1,11 +1,27 @@
 const ServerError = require('./ServerError');
 const ValidationError = require('./ValidationError');
-const {successResponse, errorResponse} = require('../../utils/responses');
+
+const {OK} = require('../constants/statusCodes');
 
 const Joi = require('joi');
 
 const asyncHandler = (fn, options) => {
   return async (req, res, next) => {
+    const successResponse = (payload, message) => {
+      res.status(OK).json({
+        success: true,
+        message: message,
+        data: payload,
+      });
+    };
+
+    const errorResponse = (httpCode, payload) => {
+      res.status(httpCode).json({
+        success: false,
+        message: payload,
+      });
+    };
+
     try {
       if (options.validator) {
         await options.validator(req);
