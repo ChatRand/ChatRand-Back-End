@@ -6,12 +6,20 @@ const Joi = require('joi');
 
 const asyncHandler = (fn, options) => {
   return async (req, res, next) => {
+    const sendSuccessResponse = (payload, message) => {
+      successResponse(res, payload, message);
+    };
+
+    const sendErrorResponse = (httpCode, payload) => {
+      errorResponse(res, httpCode, payload);
+    };
+
     try {
       if (options.validator) {
         await options.validator(req);
       }
 
-      await fn({req, res, next}, {successResponse, errorResponse});
+      await fn({req, res, next}, {sendSuccessResponse, sendErrorResponse});
     } catch (err) {
       switch (err.constructor) {
         case Joi.ValidationError:

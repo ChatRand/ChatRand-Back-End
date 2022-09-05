@@ -1,5 +1,5 @@
-const testDefault = async (request, {successResponse}) => {
-  return successResponse(request, {}, 'success');
+const testDefault = async ({req, res, next}, {sendSuccessResponse}) => {
+  return sendSuccessResponse({}, 'success');
 };
 
 
