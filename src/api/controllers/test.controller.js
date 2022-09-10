@@ -1,5 +1,10 @@
-const testDefault = async ({req, res, next}, {sendSuccessResponse}) => {
-  return sendSuccessResponse({}, 'success');
+const testDefault = async (
+    request,
+    prisma,
+    {sendSuccessResponse},
+) => {
+  const users = await prisma.user.findMany();
+  return sendSuccessResponse({users}, 'success');
 };
 
 

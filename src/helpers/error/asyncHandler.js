@@ -2,6 +2,10 @@ const ServerError = require('./ServerError');
 const ValidationError = require('./ValidationError');
 const {successResponse, errorResponse} = require('../../utils/responses');
 
+const {PrismaClient} = require('@prisma/client');
+
+const prisma = new PrismaClient();
+
 const Joi = require('joi');
 
 const asyncHandler = (fn, options) => {
@@ -19,8 +23,16 @@ const asyncHandler = (fn, options) => {
         await options.validator(req);
       }
 
-      await fn({req, res, next}, {sendSuccessResponse, sendErrorResponse});
+      await fn(
+          {req, res, next},
+          prisma,
+          {
+            sendSuccessResponse,
+            sendErrorResponse,
+          },
+      );
     } catch (err) {
+      console.log(err);
       switch (err.constructor) {
         case Joi.ValidationError:
           return next(new ValidationError(err.message));
