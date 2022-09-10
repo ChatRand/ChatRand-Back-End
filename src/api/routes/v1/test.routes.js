@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable new-cap */
 const express = require('express');
-const asyncHandler = require('../../../helpers/error/asyncHandler.js');
+const asyncHandler = require('../../../helpers/error/asyncHandler');
 
 const testRouter = express.Router();
 
