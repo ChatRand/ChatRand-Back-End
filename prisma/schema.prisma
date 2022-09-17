@@ -51,6 +51,11 @@ model BlackListedToken {
   @@map("black_listed_tokens")
 }
 
+model BlackListedToken {
+  id Int @id @default(autoincrement())
+  token String?
+}
+
 enum Role {
   USER
   ADMIN
