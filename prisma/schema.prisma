@@ -40,6 +40,11 @@ model UserLogin {
   device        String
 }
 
+model BlackListedToken {
+  id Int @id @default(autoincrement())
+  token String?
+}
+
 enum Role {
   USER
   ADMIN
