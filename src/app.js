@@ -9,7 +9,7 @@ const helmet = require('helmet');
 // const mongoSanitize = require('express-mongo-sanitize');
 
 const {httpLogger} = require('./helpers/logger/serverLogger');
-const Server404Error = require('./helpers/error/Server404Error');
+const {Server404Error} = require('./helpers/error/error');
 const {errorHandler} = require('./api/middlewares/error/errorHandler');
 const clientErrorHandler = require('./api/middlewares/error/clientErrorHandler');
 

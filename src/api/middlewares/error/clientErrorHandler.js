@@ -1,5 +1,5 @@
-const Server404Error = require('../../../helpers/error/Server404Error');
-const ValidationError = require('../../../helpers/error/ValidationError');
+/* eslint-disable max-len */
+const {ValidationError, Server404Error} = require('../../../helpers/error/error');
 const {errorResponse} = require('../../../utils/responses');
 
 const clientErrorHandler = (err, req, res, next) => {

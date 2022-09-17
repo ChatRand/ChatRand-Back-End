@@ -1,5 +1,4 @@
-const ServerError = require('./ServerError');
-const ValidationError = require('./ValidationError');
+const {ValidationError, ServerError} = require('./error');
 const {successResponse, errorResponse} = require('../../utils/responses');
 
 const {PrismaClient} = require('@prisma/client');

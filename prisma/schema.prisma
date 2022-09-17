@@ -10,9 +10,38 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String?
+  id                     Int         @id @default(autoincrement())
+  first_name             String?
+  last_name              String?
+  username               String?     @unique
+  email                  String?     @unique
+  phone_number           String?     @unique
+  password               String
+  reset_password_token   String
+  reset_password_expires DateTime
+  confirmation_code      String
+  Activated              Boolean
+  role                   Role        @default(USER)
+  user_logins            UserLogin[]
+}
+
+model UserLogin {
+  id            Int      @id @default(autoincrement())
+  user          User?    @relation(fields: [user_id], references: [id])
+  user_id       Int
+  logged_out    Boolean
+  logged_out_at DateTime @default(now())
+  logged_in_at  DateTime @default(now())
+  ip_address    String
+  token_id      String?  @unique
+  token_secret  String
+  token_deleted Boolean
+  device        String
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPERADMIN
 }
