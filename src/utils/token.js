@@ -1,10 +1,9 @@
 const jwt = require('jsonwebtoken');
 const customId = require('custom-id');
-const UserLogin = require('../database/models/UserLogin');
 const config = require('../config/config');
 const userLoginService = require('../services/userLogins.service');
 
-const createToken = async (user, req) => {
+const createToken = async (user, req, prisma) => {
   const tokenId = await customId({
     userId: user._id,
     date: Date.now(),
@@ -15,15 +14,18 @@ const createToken = async (user, req) => {
          req.connection.remoteAddress ||
          req.socket.remoteAddress ||
          req.connection.socket.remoteAddress;
-
+  // Look for existing user login
   // eslint-disable-next-line max-len
-  const userLogins = await UserLogin.find({
-    userId: user._id,
-    tokenDeleted: false,
-    ipAddress: ip,
-    device: req.headers['user-agent'],
+  const userLogins = await prisma.UserLogin.findMany({
+    where: {
+      user_id: user.id,
+      token_deleted: false,
+      ip_address: ip,
+      device: req.headers['user-agent'],
+    },
   });
 
+  // Iterate and update delete
   userLogins.forEach(async (login) => {
     if (login) {
       login.tokenDeleted = true;
@@ -45,6 +47,7 @@ const createToken = async (user, req) => {
     device: req.headers['user-agent'],
   };
 
+  // Create userlogin
   const userLogin = await userLoginService.createUserLogin(userInfo);
 
   const tokenUser = {

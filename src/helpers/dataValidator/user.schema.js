@@ -18,11 +18,11 @@ const signInSchema = joi.object({
 });
 
 const signUpSchema = joi.object({
-  firstName: nameSchema,
-  lastName: nameSchema,
-  userName: userNameSchema,
+  first_name: nameSchema,
+  last_name: nameSchema,
+  username: userNameSchema,
   email: emailSchema,
-  phoneNumber: phoneNumberSchema,
+  phone_number: phoneNumberSchema,
   password: passwordSchema,
 });
 

@@ -19,42 +19,41 @@ const {serverLogger} = require('../../helpers/logger/serverLogger');
 
 const {compareHash, hashText} = require('../../utils/hashGenerators');
 
-const userSignUp = asyncHandler(async (req, res) => {
-  const userData = req.body;
-  const user = await UserService.signUp(userData);
+const userSignUp = async (
+    expressParams,
+    prisma,
+    {
+      sendSuccessResponse,
+    },
+) => {
+  const userData = expressParams.req.body;
+  // Database actions take up here
+  const user = await prisma.user.create({
+    data: {
+      ...userData,
+    },
+  });
 
-  if (!user.success) {
-    return errorResponse(res, user.code, user.msg);
-  } else {
-    savedUser = user.savedUser;
-    const token = await createToken(savedUser, req);
+  const token = await createToken(user, expressParams.req, prisma);
 
-    savedUser.accessToken = token;
+  user.accessToken = token;
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: config.app.secureCookie,
-      sameSite: true,
-    });
+  serverLogger.info(`User With Id ${user.id} Successfully Registered`);
+  emailEvent.emit('user_regsistered', user);
 
-    serverLogger.info(`User With Id ${savedUser._id} Successfully Registered`);
-    emailEvent.emit('user_regsistered', savedUser);
-
-    return successResponse(
-        res,
-        _.pick(savedUser,
-            [
-              '_id',
-              'firstName',
-              'lastName',
-              'userName',
-              'email',
-              'phoneNumber',
-              'accessToken',
-            ],
-        ), 'User Saved To Database');
-  }
-});
+  return sendSuccessResponse(
+      _.pick(user,
+          [
+            '_id',
+            'first_name',
+            'last_name',
+            'username',
+            'email',
+            'phone_number',
+            'accessToken',
+          ],
+      ), 'User Saved To Database');
+};
 
 const userSignIn = asyncHandler(async (req, res) => {
   const userData = req.body;

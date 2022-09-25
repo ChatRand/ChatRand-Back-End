@@ -1,5 +1,5 @@
 const testDefault = async (
-    request,
+    expressParams,
     prisma,
     {sendSuccessResponse},
 ) => {
