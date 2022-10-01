@@ -1,9 +1,9 @@
 const {OK} = require('../helpers/constants/statusCodes');
 
-const errorResponse = (res, httpCode, payload) => {
+const errorResponse = (res, httpCode, message) => {
   res.status(httpCode).json({
     success: false,
-    message: payload,
+    message: message,
   });
 };
 

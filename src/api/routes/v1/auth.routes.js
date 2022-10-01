@@ -10,7 +10,7 @@ const authRouter = express.Router();
 
 
 authRouter.post('/sign-up', asyncHandler(AuthController.userSignUp, {validator: UserValidator.SignUpValidator}));
-// authRouter.post('/sign-in', UserValidator.signInValidator, AuthController.userSignIn);
+authRouter.post('/sign-in', asyncHandler(AuthController.userSignIn, {validator: UserValidator.SignInValidator}));
 // authRouter.delete('/sign-out', AuthController.userSignOut);
 
 // authRouter.get('/check-username/:username', AuthController.checkUserName);

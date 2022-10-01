@@ -16,6 +16,7 @@ const {createToken} = require('../../utils/token');
 // } = require('../../helpers/constants/statusCodes');
 // const asyncHandler = require('../../helpers/error/asyncHandler');
 const {serverLogger} = require('../../helpers/logger/serverLogger');
+const {compareHash, hashText} = require('../../utils/hashGenerators');
 
 // const {compareHash, hashText} = require('../../utils/hashGenerators');
 
@@ -27,6 +28,16 @@ const userSignUp = async (
     },
 ) => {
   const userData = expressParams.req.body;
+
+  const confirmationCode = (Math.floor(10000 + Math.random() * 900000))
+      .toString();
+
+  const hashedPassword = await hashText(userData.password);
+
+  userData.password = hashedPassword;
+  userData.confirmation_code = confirmationCode;
+
+
   // Database actions take up here
   const user = await prisma.user.create({
     data: {
@@ -55,36 +66,51 @@ const userSignUp = async (
       ), 'User Saved To Database');
 };
 
-// const userSignIn = asyncHandler(async (req, res) => {
-//   const userData = req.body;
-//   const user = await UserService.signIn(userData);
+const userSignIn = async (
+    expressParams,
+    prisma,
+    {
+      sendSuccessResponse,
+      sendErrorResponse,
+    },
+) => {
+  const userData = expressParams.req.body;
+  const user = await prisma.user.findUnique({
+    where: {
+      username: userData.username,
+    },
+  });
 
-//   if (!user.success) {
-//     return errorResponse(res, user.code, user.msg);
-//   }
-//   const token = await createToken(user, req);
+  if (!user) {
+    return sendErrorResponse(400, {
+      message: 'User not found',
+    });
+  }
 
-//   user.accessToken = token;
+  console.log(userData.password, user.password);
+  const correctPassword = await compareHash(userData.password, user.password);
 
-//   res.cookie('token', token, {
-//     httpOnly: true,
-//     secure: config.app.secureCookie,
-//     sameSite: true,
-//   });
-//   serverLogger.info(`User With Id ${user._id} Successfully Logged In`);
+  if (!correctPassword) {
+    return sendErrorResponse(400, 'Password incorrect');
+  }
 
-//   return successResponse(
-//       res,
-//       _.pick(user,
-//           [
-//             '_id',
-//             'firstName',
-//             'lastName',
-//             'email',
-//             'accessToken',
-//           ],
-//       ), 'Successful Login');
-// });
+  const token = await createToken(user, expressParams.req, prisma);
+
+  user.accessToken = token;
+
+  serverLogger.info(`User With Id ${user.id} Successfully Logged In`);
+
+  return sendSuccessResponse(
+      _.pick(user,
+          [
+            'id',
+            'first_name',
+            'last_name',
+            'email',
+            'accessToken',
+          ],
+      ), 'Successful Login');
+};
 
 // const userSignOut = asyncHandler(async (req, res) => {
 //   const authHeader = req.headers['authorization'];
@@ -282,7 +308,7 @@ const userSignUp = async (
 
 module.exports = {
   userSignUp,
-  // userSignIn,
+  userSignIn,
   // userSignOut,
   // showUserLogins,
   // deleteUserLogin,
