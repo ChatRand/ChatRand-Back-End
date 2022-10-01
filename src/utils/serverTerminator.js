@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const {serverLogger} = require('../helpers/logger/serverLogger');
 
 const serverTerminator = () => {
@@ -8,10 +6,6 @@ const serverTerminator = () => {
       serverLogger.error(err.message);
       process.exit(1);
     }
-
-    mongoose.connection.close(() => {
-      process.exit(0);
-    });
   });
 };
 

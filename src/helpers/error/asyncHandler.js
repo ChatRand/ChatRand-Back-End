@@ -13,8 +13,8 @@ const asyncHandler = (fn, options) => {
       successResponse(res, payload, message);
     };
 
-    const sendErrorResponse = (httpCode, payload) => {
-      errorResponse(res, httpCode, payload);
+    const sendErrorResponse = (httpCode, message) => {
+      errorResponse(res, httpCode, message);
     };
 
     try {
