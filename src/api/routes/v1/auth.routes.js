@@ -13,9 +13,6 @@ authRouter.post('/sign-up', asyncHandler(AuthController.userSignUp, {validator: 
 authRouter.post('/sign-in', asyncHandler(AuthController.userSignIn, {validator: UserValidator.SignInValidator}));
 // authRouter.delete('/sign-out', AuthController.userSignOut);
 
-// authRouter.get('/check-username/:username', AuthController.checkUserName);
-// authRouter.get('/check-email/:email', AuthController.checkEmail);
-
 // authRouter.post('/account/verify/', authenticateToken, AuthController.verifyAccount);
 // authRouter.post('/account/change-password', authenticateToken, AuthController.changePassword);
 

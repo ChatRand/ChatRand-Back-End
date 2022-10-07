@@ -224,42 +224,6 @@ const userSignIn = async (
 //   }
 // });
 
-// const checkEmail = asyncHandler(async (req, res) => {
-//   const {email} = req.params;
-
-//   const emailExists = UserService.checkEmailAvailability(email);
-
-//   if (emailExists) {
-//     return successResponse(res,
-//         {
-//           exists: true,
-//         }, 'Email exists');
-//   } else {
-//     return successResponse(res,
-//         {
-//           exists: false,
-//         }, 'Email does not exist');
-//   }
-// });
-
-// const checkUserName = asyncHandler(async (req, res) => {
-//   const {userName} = req.params;
-
-//   const userNameExists = UserService.checkEmailAvailability(userName);
-
-//   if (userNameExists) {
-//     return successResponse(res,
-//         {
-//           exists: true,
-//         }, 'userName exists');
-//   } else {
-//     return successResponse(res,
-//         {
-//           exists: false,
-//         }, 'userName does not exist');
-//   }
-// });
-
 // const verifyAccount = asyncHandler(async (req, res) => {
 //   const {confirmationCode} = req.body;
 //   const user = req.user;
@@ -314,8 +278,6 @@ module.exports = {
   // deleteUserLogin,
   // deleteAllUserLogins,
   // deleteAllUserLoginsExceptCurrent,
-  // checkEmail,
-  // checkUserName,
   // verifyAccount,
   // changePassword,
 };
