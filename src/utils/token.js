@@ -64,7 +64,7 @@ const createToken = async (user, req, prisma) => {
   });
 
   const tokenUser = {
-    id: userLogin.userId,
+    id: userLogin.user_id,
     tokenId: tokenId,
   };
 
