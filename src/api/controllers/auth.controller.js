@@ -151,20 +151,27 @@ const userSignIn = async (
 //   }
 // });
 
-// const showUserLogins = asyncHandler(async (req, res) => {
-//   const userId = req.user.id;
-//   const tokenId = req.user.tokenId;
+const showUserLogins = async (
+    expressParams,
+    prisma,
+    {
+      sendErrorResponse,
+      sendSuccessResponse,
+    },
+) => {
+  const userId = expressParams.req.user.id;
+  const tokenId = expressParams.req.user.tokenId;
 
-//   const userLogins = await UserLoginsService.showUserLogins(userId, tokenId);
+  const userLogins = await UserLoginsService.showUserLogins(userId, tokenId);
 
-//   if (!userLogins) {
-//     return errorResponse(res,
-//         BAD_REQUEST,
-//         'Something went wrong try again!');
-//   } else {
-//     return successResponse(res, userLogins);
-//   }
-// });
+  if (!userLogins) {
+    return errorResponse(res,
+        BAD_REQUEST,
+        'Something went wrong try again!');
+  } else {
+    return successResponse(res, userLogins);
+  }
+};
 
 // const deleteUserLogin = asyncHandler(async (req, res) => {
 //   const loginId = req.params.login_id;
@@ -274,7 +281,7 @@ module.exports = {
   userSignUp,
   userSignIn,
   // userSignOut,
-  // showUserLogins,
+  showUserLogins,
   // deleteUserLogin,
   // deleteAllUserLogins,
   // deleteAllUserLoginsExceptCurrent,
