@@ -162,15 +162,27 @@ const showUserLogins = async (
   const userId = expressParams.req.user.id;
   const tokenId = expressParams.req.user.tokenId;
 
-  const userLogins = await UserLoginsService.showUserLogins(userId, tokenId);
+  const userLogins = await prisma.userLogin.findMany({
+    where: {
+      user_id: userId,
+    },
+  });
 
-  if (!userLogins) {
-    return errorResponse(res,
-        BAD_REQUEST,
-        'Something went wrong try again!');
-  } else {
-    return successResponse(res, userLogins);
-  }
+  let current = false;
+
+  const logins = [];
+
+  userLogins.forEach(async (login) => {
+    current = false;
+    if (tokenId == login.token_id) {
+      current = true;
+    }
+
+    login.current = current;
+    logins.push(login);
+  });
+
+  return sendSuccessResponse(userLogins);
 };
 
 // const deleteUserLogin = asyncHandler(async (req, res) => {
