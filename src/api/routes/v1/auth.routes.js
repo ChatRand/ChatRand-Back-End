@@ -17,7 +17,7 @@ authRouter.post('/sign-in', asyncHandler(AuthController.userSignIn, {validator: 
 // authRouter.post('/account/change-password', authenticateToken, AuthController.changePassword);
 
 authRouter.get('/user/logins/show', asyncHandler(authenticateToken), asyncHandler(AuthController.showUserLogins));
-// authRouter.delete('/user/logins/delete/:login_id', authenticateToken, AuthController.deleteUserLogin);
+authRouter.delete('/user/logins/delete/:login_id', asyncHandler(authenticateToken), asyncHandler(AuthController.deleteUserLogin));
 // authRouter.delete('/user/logins/delete/all', authenticateToken, AuthController.deleteAllUserLogins);
 // authRouter.delete('/user/logins/delete/all/not-current', authenticateToken, AuthController.deleteAllUserLoginsExceptCurrent);
 
