@@ -67,7 +67,7 @@ const createToken = async (user, req, prisma) => {
     id: userLogin.user_id,
     tokenId: tokenId,
   };
-
+  console.log('config', config.app.secret);
   const accessToken = jwt.sign(tokenUser, config.app.secret);
 
   return accessToken;

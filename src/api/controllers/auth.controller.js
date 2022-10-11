@@ -208,22 +208,23 @@ const deleteUserLogin = async (
   return sendSuccessResponse('Token successfully deleted!');
 };
 
-// const deleteAllUserLogins = asyncHandler(async (req, res) => {
-//   const userDetail = req.user;
-//   const deletedLogin = await UserLoginsService.deleteAllUserLogins(userDetail);
+const deleteAllUserLogins = async (
+    expressParams,
+    prisma,
+    {
+      sendSuccessResponse,
+      sendErrorResponse,
+    },
+) => {
+  const userDetail = req.user;
+  await prisma.userLogin.delete({
+    where: {
+      user_id: userDetail.id,
+    },
+  });
 
-//   if (deletedLogin.success) {
-//     return successResponse(res,
-//         { }, 'Successfully deleted all logins!');
-//   } else {
-//     switch (deletedLogin.code) {
-//       case BAD_REQUEST:
-//         return errorResponse(res,
-//             BAD_REQUEST,
-//             'Something went wrong!');
-//     }
-//   }
-// });
+  return sendSuccessResponse('Successfully deleted all logins!');
+};
 
 // const deleteAllUserLoginsExceptCurrent = asyncHandler(async (req, res) => {
 //   const userDetail = req.user;
@@ -296,7 +297,7 @@ module.exports = {
   // userSignOut,
   showUserLogins,
   deleteUserLogin,
-  // deleteAllUserLogins,
+  deleteAllUserLogins,
   // deleteAllUserLoginsExceptCurrent,
   // verifyAccount,
   // changePassword,
