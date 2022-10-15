@@ -232,7 +232,8 @@ const deleteAllUserLogins = async (
 //   const userDetail = req.user;
 
 //   // eslint-disable-next-line max-len
-//   const deletedLogin = await UserLoginsService.deleteAllUserLoginsExceptCurrent(userDetail);
+//   const deletedLogin = await UserLoginsService
+// .deleteAllUserLoginsExceptCurrent(userDetail);
 
 //   if (deletedLogin.success) {
 //     return successResponse(res,
