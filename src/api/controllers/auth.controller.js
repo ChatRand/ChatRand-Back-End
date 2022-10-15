@@ -220,6 +220,9 @@ const deleteAllUserLogins = async (
     where: {
       user_id: userDetail.id,
     },
+    data: {
+      token_deleted: true,
+    },
   });
 
   return sendSuccessResponse('Successfully deleted all logins!');
