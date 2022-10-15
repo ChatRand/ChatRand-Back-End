@@ -194,9 +194,8 @@ const deleteUserLogin = async (
     },
 ) => {
   const loginId = expressParams.req.params.login_id;
-  const userDetail = expressParams.req.user;
 
-  const toBeDeletedLogin = await prisma.userLogin.update({
+  await prisma.userLogin.update({
     where: {
       id: parseInt(loginId),
     },
