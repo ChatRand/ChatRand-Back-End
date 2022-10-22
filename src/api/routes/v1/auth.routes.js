@@ -13,7 +13,7 @@ authRouter.post('/sign-up', asyncHandler(AuthController.userSignUp, {validator: 
 authRouter.post('/sign-in', asyncHandler(AuthController.userSignIn, {validator: UserValidator.SignInValidator}));
 // authRouter.delete('/sign-out', AuthController.userSignOut);
 
-// authRouter.post('/account/verify/', authenticateToken, AuthController.verifyAccount);
+authRouter.post('/account/verify/', asyncHandler(authenticateToken), asyncHandler(AuthController.verifyAccount));
 // authRouter.post('/account/change-password', authenticateToken, AuthController.changePassword);
 
 authRouter.get('/user/logins/show', asyncHandler(authenticateToken), asyncHandler(AuthController.showUserLogins));

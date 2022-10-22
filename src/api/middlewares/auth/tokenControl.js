@@ -51,8 +51,8 @@ const authenticateToken = async (
         },
       });
 
-      if (login.tokenDeleted) {
-        const newBlackListedToken = await prisma.blackListedToken.create({
+      if (login.token_deleted) {
+        await prisma.blackListedToken.create({
           data: {
             token: token,
           },
