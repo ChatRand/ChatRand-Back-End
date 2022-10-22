@@ -151,76 +151,167 @@ const userSignIn = async (
 //   }
 // });
 
-// const showUserLogins = asyncHandler(async (req, res) => {
-//   const userId = req.user.id;
-//   const tokenId = req.user.tokenId;
+const showUserLogins = async (
+    expressParams,
+    prisma,
+    {
+      sendErrorResponse,
+      sendSuccessResponse,
+    },
+) => {
+  const userId = expressParams.req.user.id;
+  const tokenId = expressParams.req.user.tokenId;
 
-//   const userLogins = await UserLoginsService.showUserLogins(userId, tokenId);
+  const userLogins = await prisma.userLogin.findMany({
+    where: {
+      user_id: userId,
+    },
+  });
 
-//   if (!userLogins) {
-//     return errorResponse(res,
-//         BAD_REQUEST,
-//         'Something went wrong try again!');
-//   } else {
-//     return successResponse(res, userLogins);
-//   }
-// });
+  let current = false;
 
-// const deleteUserLogin = asyncHandler(async (req, res) => {
-//   const loginId = req.params.login_id;
-//   const userDetail = req.user;
-//   const deletedLogin = await UserLoginsService.deleteUserLogin(loginId,
-//       userDetail);
+  const logins = [];
 
-//   if (deletedLogin.success) {
-//     return successResponse(res, { }, 'Successfully deleted a login');
-//   } else {
-//     switch (deletedLogin.code) {
-//       case UNAUTHORIZED:
-//         return errorResponse(res,
-//             UNAUTHORIZED,
-//             'You can only delete your login');
-//       case BAD_REQUEST:
-//         return errorResponse(res,
-//             BAD_REQUEST,
-//             'Something went wrong!');
-//     }
-//   }
-// });
+  userLogins.forEach(async (login) => {
+    current = false;
+    if (tokenId == login.token_id) {
+      current = true;
+    }
 
-// const deleteAllUserLogins = asyncHandler(async (req, res) => {
-//   const userDetail = req.user;
-//   const deletedLogin = await UserLoginsService.deleteAllUserLogins(userDetail);
+    login.current = current;
+    logins.push(login);
+  });
 
-//   if (deletedLogin.success) {
+  return sendSuccessResponse(userLogins);
+};
+
+const deleteUserLogin = async (
+    expressParams,
+    prisma,
+    {
+      sendErrorResponse,
+      sendSuccessResponse,
+    },
+) => {
+  const loginId = expressParams.req.params.login_id;
+
+  await prisma.userLogin.update({
+    where: {
+      id: parseInt(loginId),
+    },
+    data: {
+      token_deleted: true,
+    },
+  });
+
+  return sendSuccessResponse('Token successfully deleted!');
+};
+
+const deleteAllUserLogins = async (
+    expressParams,
+    prisma,
+    {
+      sendSuccessResponse,
+      sendErrorResponse,
+    },
+) => {
+  const userDetail = expressParams.req.user;
+  await prisma.user.update({
+    where: {
+      id: parseInt(userDetail.id),
+    },
+    data: {
+      user_logins: {
+        updateMany: {
+          where: {
+            user_id: userDetail.id,
+          },
+          data: {
+            token_deleted: true,
+          },
+        },
+      },
+    },
+  });
+
+  return sendSuccessResponse('Successfully deleted all logins!');
+};
+
+const deleteAllUserLoginsExceptCurrent = async (
+    expressParams,
+    prisma,
+    {
+      sendSuccessResponse,
+      sendErrorResponse,
+    },
+) => {
+  const userDetail = expressParams.req.user;
+
+  const userLogins = await prisma.userLogin.findMany({
+    where: {
+      user_id: userDetail.id,
+    },
+  });
+
+  // eslint-disable-next-line prefer-const
+  let current = false;
+
+  userLogins.forEach(async (login) => {
+    current = false;
+
+    if (userDetail.tokenId === login.token_id) {
+      current = true;
+    }
+
+    if (!current) {
+      await prisma.userLogin.update({
+        where: {
+          token_id: login.token_id,
+        },
+        data: {
+          token_deleted: true,
+          logged_out: true,
+        },
+      });
+    }
+  });
+
+  return sendSuccessResponse('Token deleted except current!');
+};
+
+// const checkEmail = asyncHandler(async (req, res) => {
+//   const {email} = req.params;
+
+//   const emailExists = UserService.checkEmailAvailability(email);
+
+//   if (emailExists) {
 //     return successResponse(res,
-//         { }, 'Successfully deleted all logins!');
+//         {
+//           exists: true,
+//         }, 'Email exists');
 //   } else {
-//     switch (deletedLogin.code) {
-//       case BAD_REQUEST:
-//         return errorResponse(res,
-//             BAD_REQUEST,
-//             'Something went wrong!');
-//     }
+//     return successResponse(res,
+//         {
+//           exists: false,
+//         }, 'Email does not exist');
 //   }
 // });
 
-// const deleteAllUserLoginsExceptCurrent = asyncHandler(async (req, res) => {
-//   const userDetail = req.user;
+// const checkUserName = asyncHandler(async (req, res) => {
+//   const {userName} = req.params;
 
-//   // eslint-disable-next-line max-len
-//   const deletedLogin = await UserLoginsService.deleteAllUserLoginsExceptCurrent(userDetail);
+//   const userNameExists = UserService.checkEmailAvailability(userName);
 
-//   if (deletedLogin.success) {
+//   if (userNameExists) {
 //     return successResponse(res,
-//         { }, 'Successfully deleted all logins but this one!');
+//         {
+//           exists: true,
+//         }, 'userName exists');
 //   } else {
-//     switch (deletedLogin.code) {
-//       case BAD_REQUEST:
-//         return errorResponse(res,
-//             BAD_REQUEST,
-//             'Something went wrong!');
-//     }
+//     return successResponse(res,
+//         {
+//           exists: false,
+//         }, 'userName does not exist');
 //   }
 // });
 
@@ -274,10 +365,12 @@ module.exports = {
   userSignUp,
   userSignIn,
   // userSignOut,
-  // showUserLogins,
-  // deleteUserLogin,
-  // deleteAllUserLogins,
-  // deleteAllUserLoginsExceptCurrent,
+  showUserLogins,
+  deleteUserLogin,
+  deleteAllUserLogins,
+  deleteAllUserLoginsExceptCurrent,
+  // checkEmail,
+  // checkUserName,
   // verifyAccount,
   // changePassword,
 };

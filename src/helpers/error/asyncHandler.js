@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 const Joi = require('joi');
 
-const asyncHandler = (fn, options) => {
+const asyncHandler = (fn, options = {}) => {
   return async (req, res, next) => {
     const sendSuccessResponse = (payload, message) => {
       successResponse(res, payload, message);
