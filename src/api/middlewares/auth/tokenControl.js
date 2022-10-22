@@ -38,7 +38,6 @@ const authenticateToken = async (
     return sendErrorResponse(UNAUTHORIZED,
         'Token blacklisted. Cannot use this token');
   }
-  console.log('env', process.env.DEV_APP_SECRET);
   jwt.verify(token, process.env.DEV_APP_SECRET, async (err, payload) => {
     if (err) {
       return sendErrorResponse(FORBIDDEN, 'Unable to verify the token.');
@@ -52,8 +51,8 @@ const authenticateToken = async (
         },
       });
 
-      if (login.tokenDeleted) {
-        const newBlackListedToken = await prisma.blackListedToken.create({
+      if (login.token_deleted) {
+        await prisma.blackListedToken.create({
           data: {
             token: token,
           },

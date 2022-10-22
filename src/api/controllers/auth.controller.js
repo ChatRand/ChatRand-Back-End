@@ -17,6 +17,7 @@ const {createToken} = require('../../utils/token');
 // const asyncHandler = require('../../helpers/error/asyncHandler');
 const {serverLogger} = require('../../helpers/logger/serverLogger');
 const {compareHash, hashText} = require('../../utils/hashGenerators');
+const {BAD_REQUEST} = require('../../helpers/constants/statusCodes');
 
 // const {compareHash, hashText} = require('../../utils/hashGenerators');
 
@@ -315,31 +316,45 @@ const deleteAllUserLoginsExceptCurrent = async (
 //   }
 // });
 
-// const verifyAccount = asyncHandler(async (req, res) => {
-//   const {confirmationCode} = req.body;
-//   const user = req.user;
+const verifyAccount = async (
+    expressParams,
+    prisma,
+    {
+      sendErrorResponse,
+      sendSuccessResponse,
+    },
+) => {
+  const {confirmationCode} = expressParams.req.body;
+  const userDetail = expressParams.req.user;
 
-//   const requestedUser = await UserService.findById(user.id);
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userDetail.id,
+    },
+  });
 
-//   if (!(requestedUser.found)) {
-//     return errorResponse(res,
-//         BAD_REQUEST,
-//         requestedUser.message);
-//   }
-//   if (requestedUser.data.confirmationCode == confirmationCode) {
-//     requestedUser.data.activated = true;
-//     requestedUser.data.confirmationCode = '';
+  if (!user) {
+    return sendErrorResponse(BAD_REQUEST, 'User not found');
+  }
 
-//     await requestedUser.data.save();
-//     return successResponse(res,
-//         { },
-//         'Account activated!');
-//   } else {
-//     errorResponse(res,
-//         BAD_REQUEST,
-//         'Confirmation code not correct!');
-//   }
-// });
+  if (user.confirmation_code !== confirmationCode) {
+    return sendErrorResponse(BAD_REQUEST, 'Confirmation code not correct');
+  }
+
+  await prisma.user.update({
+    where: {
+      id: userDetail.id,
+    },
+    data: {
+      Activated: true,
+      confirmation_code: '',
+    },
+  });
+
+  return sendSuccessResponse(
+      { },
+      'Account activated!');
+};
 
 // const changePassword = asyncHandler(async (req, res) => {
 //   const user = req.user;
@@ -371,6 +386,6 @@ module.exports = {
   deleteAllUserLoginsExceptCurrent,
   // checkEmail,
   // checkUserName,
-  // verifyAccount,
+  verifyAccount,
   // changePassword,
 };
