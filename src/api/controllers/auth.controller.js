@@ -215,36 +215,103 @@ const deleteAllUserLogins = async (
       sendErrorResponse,
     },
 ) => {
-  const userDetail = req.user;
-  await prisma.userLogin.delete({
+  const userDetail = expressParams.req.user;
+  await prisma.user.update({
     where: {
-      user_id: userDetail.id,
+      id: parseInt(userDetail.id),
     },
     data: {
-      token_deleted: true,
+      user_logins: {
+        updateMany: {
+          where: {
+            user_id: userDetail.id,
+          },
+          data: {
+            token_deleted: true,
+          },
+        },
+      },
     },
   });
 
   return sendSuccessResponse('Successfully deleted all logins!');
 };
 
-// const deleteAllUserLoginsExceptCurrent = asyncHandler(async (req, res) => {
-//   const userDetail = req.user;
+const deleteAllUserLoginsExceptCurrent = async (
+    expressParams,
+    prisma,
+    {
+      sendSuccessResponse,
+      sendErrorResponse,
+    },
+) => {
+  const userDetail = expressParams.req.user;
 
-//   // eslint-disable-next-line max-len
-//   const deletedLogin = await UserLoginsService
-// .deleteAllUserLoginsExceptCurrent(userDetail);
+  const userLogins = await prisma.userLogin.findMany({
+    where: {
+      user_id: userDetail.id,
+    },
+  });
 
-//   if (deletedLogin.success) {
+  // eslint-disable-next-line prefer-const
+  let current = false;
+
+  userLogins.forEach(async (login) => {
+    current = false;
+
+    if (userDetail.tokenId === login.token_id) {
+      current = true;
+    }
+
+    if (!current) {
+      await prisma.userLogin.update({
+        where: {
+          token_id: login.token_id,
+        },
+        data: {
+          token_deleted: true,
+          logged_out: true,
+        },
+      });
+    }
+  });
+
+  return sendSuccessResponse('Token deleted except current!');
+};
+
+// const checkEmail = asyncHandler(async (req, res) => {
+//   const {email} = req.params;
+
+//   const emailExists = UserService.checkEmailAvailability(email);
+
+//   if (emailExists) {
 //     return successResponse(res,
-//         { }, 'Successfully deleted all logins but this one!');
+//         {
+//           exists: true,
+//         }, 'Email exists');
 //   } else {
-//     switch (deletedLogin.code) {
-//       case BAD_REQUEST:
-//         return errorResponse(res,
-//             BAD_REQUEST,
-//             'Something went wrong!');
-//     }
+//     return successResponse(res,
+//         {
+//           exists: false,
+//         }, 'Email does not exist');
+//   }
+// });
+
+// const checkUserName = asyncHandler(async (req, res) => {
+//   const {userName} = req.params;
+
+//   const userNameExists = UserService.checkEmailAvailability(userName);
+
+//   if (userNameExists) {
+//     return successResponse(res,
+//         {
+//           exists: true,
+//         }, 'userName exists');
+//   } else {
+//     return successResponse(res,
+//         {
+//           exists: false,
+//         }, 'userName does not exist');
 //   }
 // });
 
@@ -301,7 +368,9 @@ module.exports = {
   showUserLogins,
   deleteUserLogin,
   deleteAllUserLogins,
-  // deleteAllUserLoginsExceptCurrent,
+  deleteAllUserLoginsExceptCurrent,
+  // checkEmail,
+  // checkUserName,
   // verifyAccount,
   // changePassword,
 };
