@@ -356,24 +356,42 @@ const verifyAccount = async (
       'Account activated!');
 };
 
-// const changePassword = asyncHandler(async (req, res) => {
-//   const user = req.user;
+const changePassword = async (
+    expressParams,
+    prisma,
+    {
+      sendErrorResponse,
+      sendSuccessResponse,
+    },
+) => {
+  const userDetails = expressParams.req.user;
 
-//   const {data} = await UserService.findById(user.id);
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userDetails.id,
+    },
+  });
 
-//   const {newPassword, oldPassword} = req.body;
+  const {newPassword, oldPassword} = expressParams.req.body;
 
-//   if (compareHash(oldPassword, data.password)) {
-//     data.password = await hashText(newPassword);
-//     await data.save();
+  if (compareHash(oldPassword, user.password)) {
+    const newHashedPassword = await hashText(newPassword);
+    await prisma.user.update({
+      where: {
+        id: userDetails.id,
+      },
+      data: {
+        password: newHashedPassword,
+      },
+    });
 
-//     return successResponse(res, { }, 'Successfully changed password');
-//   } else {
-//     return errorResponse(res,
-//         BAD_REQUEST,
-//         'Passwords do not match');
-//   }
-// });
+    return sendSuccessResponse({ }, 'Successfully changed password');
+  } else {
+    return sendErrorResponse(
+        BAD_REQUEST,
+        'Passwords do not match');
+  }
+};
 
 
 module.exports = {
@@ -387,5 +405,5 @@ module.exports = {
   // checkEmail,
   // checkUserName,
   verifyAccount,
-  // changePassword,
+  changePassword,
 };
