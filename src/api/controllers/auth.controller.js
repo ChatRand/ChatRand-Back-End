@@ -1,25 +1,11 @@
 const _ = require('lodash');
 const {emailEvent} = require('../../subscribers/send_email_confirmation');
 
-// const config = require('../../config/config');
-// const UserService = require('../../services/user.service');
-// const UserLoginsService = require('../../services/userLogins.service');
-
 const {createToken} = require('../../utils/token');
 
-// const {successResponse, errorResponse} = require('../../utils/responses');
-// // eslint-disable-next-line max-len
-// const {
-//   BAD_REQUEST,
-//   UNAUTHORIZED,
-//   FORBIDDEN,
-// } = require('../../helpers/constants/statusCodes');
-// const asyncHandler = require('../../helpers/error/asyncHandler');
 const {serverLogger} = require('../../helpers/logger/serverLogger');
 const {compareHash, hashText} = require('../../utils/hashGenerators');
 const {BAD_REQUEST} = require('../../helpers/constants/statusCodes');
-
-// const {compareHash, hashText} = require('../../utils/hashGenerators');
 
 const userSignUp = async (
     expressParams,
@@ -112,45 +98,6 @@ const userSignIn = async (
           ],
       ), 'Successful Login');
 };
-
-// const userSignOut = asyncHandler(async (req, res) => {
-//   const authHeader = req.headers['authorization'];
-
-//   const bearer = authHeader && authHeader.split(' ')[0];
-
-//   if (bearer != 'Bearer') {
-//     return errorResponse(res,
-//         UNAUTHORIZED,
-//         'Auth token required');
-//   }
-
-//   const token = authHeader && authHeader.split(' ')[1];
-
-//   if (token == null) {
-//     return errorResponse(
-//         res,
-//         UNAUTHORIZED,
-//         'Auth token required',
-//     );
-//   }
-
-//   const blackListed = await UserLoginsService.blackListAToken(token);
-
-//   if (blackListed.success) {
-//     return successResponse(res, { }, 'Successfully Signed Out');
-//   } else {
-//     switch (blackListed.code) {
-//       case UNAUTHORIZED:
-//         return errorResponse(res,
-//             UNAUTHORIZED,
-//             'Token blacklisted. Cannot use this token');
-//       case FORBIDDEN:
-//         return errorResponse(res,
-//             FORBIDDEN,
-//             'Unable to verify token');
-//     }
-//   }
-// });
 
 const showUserLogins = async (
     expressParams,
@@ -280,42 +227,6 @@ const deleteAllUserLoginsExceptCurrent = async (
   return sendSuccessResponse('Token deleted except current!');
 };
 
-// const checkEmail = asyncHandler(async (req, res) => {
-//   const {email} = req.params;
-
-//   const emailExists = UserService.checkEmailAvailability(email);
-
-//   if (emailExists) {
-//     return successResponse(res,
-//         {
-//           exists: true,
-//         }, 'Email exists');
-//   } else {
-//     return successResponse(res,
-//         {
-//           exists: false,
-//         }, 'Email does not exist');
-//   }
-// });
-
-// const checkUserName = asyncHandler(async (req, res) => {
-//   const {userName} = req.params;
-
-//   const userNameExists = UserService.checkEmailAvailability(userName);
-
-//   if (userNameExists) {
-//     return successResponse(res,
-//         {
-//           exists: true,
-//         }, 'userName exists');
-//   } else {
-//     return successResponse(res,
-//         {
-//           exists: false,
-//         }, 'userName does not exist');
-//   }
-// });
-
 const verifyAccount = async (
     expressParams,
     prisma,
@@ -397,13 +308,10 @@ const changePassword = async (
 module.exports = {
   userSignUp,
   userSignIn,
-  // userSignOut,
   showUserLogins,
   deleteUserLogin,
   deleteAllUserLogins,
   deleteAllUserLoginsExceptCurrent,
-  // checkEmail,
-  // checkUserName,
   verifyAccount,
   changePassword,
 };

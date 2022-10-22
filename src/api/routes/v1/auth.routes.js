@@ -11,7 +11,6 @@ const authRouter = express.Router();
 
 authRouter.post('/sign-up', asyncHandler(AuthController.userSignUp, {validator: UserValidator.SignUpValidator}));
 authRouter.post('/sign-in', asyncHandler(AuthController.userSignIn, {validator: UserValidator.SignInValidator}));
-// authRouter.delete('/sign-out', AuthController.userSignOut);
 
 authRouter.post('/account/verify/', asyncHandler(authenticateToken), asyncHandler(AuthController.verifyAccount));
 authRouter.put('/account/change-password', asyncHandler(authenticateToken), asyncHandler(AuthController.changePassword));
