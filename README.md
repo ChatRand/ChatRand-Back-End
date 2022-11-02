@@ -1,4 +1,4 @@
-# Eazify Nodejs Based Backend Framework
+# Eazify Nodejs Based Backend Boilerplate/Template
 
 I created this framework in order to ease the process of scafolding my backend applications I make with Nodejs + MongoDB. 
 
