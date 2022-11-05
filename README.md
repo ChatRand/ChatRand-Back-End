@@ -1,4 +1,4 @@
-# Eazify Nodejs Based Backend Boilerplate/Template
+# Eazify Nodejs Based Backend Boilerplate/Framework-ish
 
 I created this boilerplate(Framework-ish) in order to ease the process of scafolding my backend applications I make with Nodejs + MongoDB Soon to be migrating to prisma. 
 
