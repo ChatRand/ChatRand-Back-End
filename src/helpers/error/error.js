@@ -3,13 +3,14 @@ const {NOT_FOUND, BAD_REQUEST, INTERNAL_SERVER} = require('../constants/statusCo
 
 /* eslint-disable require-jsdoc */
 class BaseError extends Error {
-  constructor(name, httpCode, isOperational, description) {
+  constructor(name, httpCode, isOperational, description, details={}) {
     super(description);
 
     Object.setPrototypeOf(this, new.target.prototype);
     this.name = name;
     this.httpCode = httpCode;
     this.isOperational = isOperational;
+    this.details = details;
 
     Error.captureStackTrace(this);
   }
@@ -34,9 +35,16 @@ class ValidationError extends BaseError {
   }
 };
 
+class DatabaseError extends BaseError {
+  constructor(description = 'Internal Database Error', details) {
+    super(description, BAD_REQUEST, true, description, details);
+  }
+}
+
 module.exports = {
   BaseError,
   Server404Error,
   ServerError,
   ValidationError,
+  DatabaseError,
 };

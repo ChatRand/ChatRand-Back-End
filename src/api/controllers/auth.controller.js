@@ -74,7 +74,6 @@ const userSignIn = async (
     });
   }
 
-  console.log(userData.password, user.password);
   const correctPassword = await compareHash(userData.password, user.password);
 
   if (!correctPassword) {
