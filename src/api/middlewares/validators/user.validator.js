@@ -1,18 +1,15 @@
 /* eslint-disable max-len */
-const asyncHandler = require('../../../helpers/error/asyncHandler');
 const UserValidationSchema = require('../../../helpers/dataValidator/user.schema');
 
-const signInValidator = asyncHandler(async (req, res, next) => {
+const SignInValidator = async (req) => {
   await UserValidationSchema.signInSchema.validateAsync(req.body, UserValidationSchema.schemaOptions);
-  return next();
-});
+};
 
-const SignUpValidator = asyncHandler(async (req, res, next) => {
+const SignUpValidator = async (req) => {
   await UserValidationSchema.signUpSchema.validateAsync(req.body, UserValidationSchema.schemaOptions);
-  return next();
-});
+};
 
 module.exports = {
-  signInValidator,
+  SignInValidator,
   SignUpValidator,
 };

@@ -1,10 +1,8 @@
 const jwt = require('jsonwebtoken');
 const customId = require('custom-id');
-const UserLogin = require('../database/models/UserLogin');
 const config = require('../config/config');
-const userLoginService = require('../services/userLogins.service');
 
-const createToken = async (user, req) => {
+const createToken = async (user, req, prisma) => {
   const tokenId = await customId({
     userId: user._id,
     date: Date.now(),
@@ -15,19 +13,28 @@ const createToken = async (user, req) => {
          req.connection.remoteAddress ||
          req.socket.remoteAddress ||
          req.connection.socket.remoteAddress;
-
+  // Look for existing user login
   // eslint-disable-next-line max-len
-  const userLogins = await UserLogin.find({
-    userId: user._id,
-    tokenDeleted: false,
-    ipAddress: ip,
-    device: req.headers['user-agent'],
+  const userLogins = await prisma.UserLogin.findMany({
+    where: {
+      user_id: user.id,
+      token_deleted: false,
+      ip_address: ip,
+      device: req.headers['user-agent'],
+    },
   });
 
+  // Iterate and update delete
   userLogins.forEach(async (login) => {
     if (login) {
-      login.tokenDeleted = true;
-      await login.save();
+      await prisma.userLogin.update({
+        where: {
+          id: login.id,
+        },
+        data: {
+          deleted: true,
+        },
+      });
     }
   });
 
@@ -38,20 +45,29 @@ const createToken = async (user, req) => {
   });
 
   const userInfo = {
-    userId: user._id,
-    tokenId: tokenId,
-    tokenSecret: tokenSecret,
-    ipAddress: ip,
+    user_id: user._id,
+    token_id: tokenId,
+    token_secret: tokenSecret,
+    ip_address: ip,
     device: req.headers['user-agent'],
+    logged_out: false,
+    user: {
+      connect: {
+        id: user.id,
+      },
+    },
   };
 
-  const userLogin = await userLoginService.createUserLogin(userInfo);
+  // Create userlogin
+  const userLogin = await prisma.userLogin.create({
+    data: userInfo,
+  });
 
   const tokenUser = {
-    id: userLogin.userId,
+    id: userLogin.user_id,
     tokenId: tokenId,
   };
-
+  console.log('config', config.app.secret);
   const accessToken = jwt.sign(tokenUser, config.app.secret);
 
   return accessToken;

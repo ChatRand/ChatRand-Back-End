@@ -5,7 +5,7 @@ const env = process.env.NODE_ENV;
 const development = {
   app: {
     port: parseInt(process.env.APP_PORT, 10) || 3000,
-    secret: process.env.APP_SECRET || 'Sec896543MJQRU,*^&',
+    secret: process.env.DEV_APP_SECRET || 'Sec896543MJQRU,*^&',
     secureCookie: false,
     email_username: process.env.APP_EMAIL_USERNAME,
     email_password: process.env.APP_EMAIL_PASSWORD,

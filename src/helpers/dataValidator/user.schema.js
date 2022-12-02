@@ -13,16 +13,16 @@ const emailSchema = joi.string().regex(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,
 const phoneNumberSchema = joi.string().required();
 
 const signInSchema = joi.object({
-  userName: userNameSchema,
+  username: userNameSchema,
   password: passwordSchema,
 });
 
 const signUpSchema = joi.object({
-  firstName: nameSchema,
-  lastName: nameSchema,
-  userName: userNameSchema,
+  first_name: nameSchema,
+  last_name: nameSchema,
+  username: userNameSchema,
   email: emailSchema,
-  phoneNumber: phoneNumberSchema,
+  phone_number: phoneNumberSchema,
   password: passwordSchema,
 });
 

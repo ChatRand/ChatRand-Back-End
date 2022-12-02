@@ -1,4 +1,4 @@
-const BaseError = require('./BaseError');
+const {BaseError} = require('./error');
 const serverTerminator = require('../../utils/serverTerminator');
 const {serverLogger} = require('../logger/serverLogger');
 

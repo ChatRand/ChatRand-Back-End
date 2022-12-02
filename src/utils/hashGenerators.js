@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-const ServerError = require('../helpers/error/ServerError');
+const {ServerError} = require('../helpers/error/error');
 
 const hashText = async (text, round = 10) => {
   try {
