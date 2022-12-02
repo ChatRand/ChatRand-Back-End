@@ -1,6 +1,6 @@
-# Eazify Nodejs Based Backend Framework
+# Eazify Nodejs Based Backend Boilerplate/Framework-ish
 
-I created this framework in order to ease the process of scafolding my backend applications I make with Nodejs + MongoDB. 
+I created this boilerplate(Framework-ish) in order to ease the process of scafolding my backend applications I make with Nodejs + MongoDB Soon to be migrating to prisma. 
 
 Eazify is now getting to be more easy to use and also a documentation coming soon for it. Stay tuned... 
 
