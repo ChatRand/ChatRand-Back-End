@@ -1,7 +1,7 @@
 const {ValidationError, ServerError, DatabaseError} = require('./error');
 const {successResponse, errorResponse} = require('../../utils/responses');
 
-const {PrismaClient, Prisma} = require('@prisma/client');
+const {PrismaClient} = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
@@ -33,7 +33,7 @@ const asyncHandler = (fn, options = {}) => {
     } catch (err) {
       if (err.constructor === Joi.ValidationError) {
         return next(new ValidationError(err.message));
-      } else if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      } else if (err instanceof DatabaseError) {
         return next(new DatabaseError(err.message, err.meta));
       } else {
         return next(new ServerError(err.message));

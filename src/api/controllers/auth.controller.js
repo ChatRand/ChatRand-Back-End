@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const _ = require('lodash');
 const {emailEvent} = require('../../subscribers/send_email_confirmation');
 
@@ -6,6 +7,7 @@ const {createToken} = require('../../utils/token');
 const {serverLogger} = require('../../helpers/logger/serverLogger');
 const {compareHash, hashText} = require('../../utils/hashGenerators');
 const {BAD_REQUEST} = require('../../helpers/constants/statusCodes');
+const runDatabaseQuery = require('../../helpers/handlers/makdeDatabaseOperation');
 
 const userSignUp = async (
     expressParams,
@@ -26,11 +28,11 @@ const userSignUp = async (
 
 
   // Database actions take up here
-  const user = await prisma.user.create({
+  const user = await runDatabaseQuery(prisma.user.create({
     data: {
       ...userData,
     },
-  });
+  }));
 
   const token = await createToken(user, expressParams.req, prisma);
 
