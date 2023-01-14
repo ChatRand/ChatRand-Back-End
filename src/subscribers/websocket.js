@@ -1,6 +1,6 @@
 const registerSocketSubscribers = (socket) => {
   socket.emit('welcome', {
-    message: 'welcome to chatRand',
+    message: 'welcome to eazify',
     socketId: socket.id,
   });
 
